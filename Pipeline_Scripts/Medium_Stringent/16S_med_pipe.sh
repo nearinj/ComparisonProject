@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ 1 -eq 0]; then
+
 echo "*******************FOR 16S DATA************************"
 
 read -p "clear previous data? " op
@@ -74,11 +74,14 @@ convert_dada2_out.R -i \
 
 echo "************************************Summarize biom file and Rarifying to highest depth possible****************************"
 biom summarize-table -i seqtab.biom -o seqtab_summary.txt
-fi
+
+
 source activate qiime1
+
 #get lowest number of reads in a sample and rarify
 rare="$(cat seqtab_summary.txt | awk 'NR >= 16 { print }' | awk -F" " '{print $2}' | sort -n | head -1)"
-single_rarefaction.py -i seqtab.biom -o seqtab_rare.biom -d $rare
+rarefix=${rare/.0/}
+single_rarefaction.py -i seqtab.biom -o seqtab_rare.biom -d $rarefix
 
 
 
